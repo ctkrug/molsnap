@@ -112,7 +112,7 @@ Make the tool feel good to use and match the design direction.
   - Builds into a single self-contained directory with relative asset
     paths (works when hosted under a subpath).
 
-- [ ] **4.2 — Final ship-gate QA pass**
+- [x] **4.2 — Final ship-gate QA pass**
   - Every acceptance criterion above is re-verified once, end to end, on
     a clean checkout (`npm ci && npm test && npm run build`).
   - The design self-review checklist in `docs/DESIGN.md` is walked
