@@ -1,5 +1,6 @@
 import SmilesDrawer from "smiles-drawer";
 import * as $3Dmol from "3dmol";
+import { loadRDKit } from "./chem/rdkit.js";
 
 const form = document.getElementById("smiles-form");
 const input = document.getElementById("smiles-input");
@@ -7,6 +8,7 @@ const status = document.getElementById("parse-status");
 const canvas2d = document.getElementById("canvas-2d");
 const panel2d = document.getElementById("panel-2d");
 const panel3d = document.getElementById("panel-3d");
+const renderButton = form.querySelector(".render-button");
 
 const drawer = new SmilesDrawer.Drawer({ width: 1, height: 1 });
 const viewer3d = $3Dmol.createViewer(document.getElementById("viewer-3d"), {
@@ -72,4 +74,18 @@ form.addEventListener("submit", (event) => {
 window.addEventListener("resize", () => sizeCanvasToPanel(canvas2d));
 
 viewer3d.render();
-render(input.value.trim());
+
+renderButton.disabled = true;
+renderButton.textContent = "loading…";
+setStatus("Loading chemistry engine…", "");
+
+loadRDKit()
+  .then(() => {
+    renderButton.disabled = false;
+    renderButton.textContent = "render";
+    render(input.value.trim());
+  })
+  .catch((error) => {
+    setStatus("Failed to load the chemistry engine. Try reloading the page.", "error");
+    console.error(error);
+  });
