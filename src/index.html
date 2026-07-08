@@ -43,6 +43,14 @@
           placeholder="CC(=O)Oc1ccccc1C(=O)O"
           value="CC(=O)Oc1ccccc1C(=O)O"
         />
+        <button
+          type="button"
+          class="copy-button"
+          id="copy-smiles"
+          aria-label="Copy SMILES to clipboard"
+        >
+          ⧉
+        </button>
         <button type="submit" class="render-button">render</button>
       </form>
 
@@ -76,6 +84,14 @@
           <div class="readout" id="readout">
             <span class="readout__formula" id="readout-formula">—</span>
             <span class="readout__weight" id="readout-weight">—</span>
+            <button
+              type="button"
+              class="copy-button"
+              id="copy-formula"
+              aria-label="Copy formula to clipboard"
+            >
+              ⧉
+            </button>
           </div>
         </div>
       </section>
