@@ -364,6 +364,12 @@ main {
   color: var(--text-muted);
 }
 
+.site-footer__more {
+  margin: var(--space-1) 0 0;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
 @media (max-width: 768px) {
   .hero {
     flex-direction: column;
