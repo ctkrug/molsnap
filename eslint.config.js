@@ -11,6 +11,7 @@ export default [
         document: "readonly",
         console: "readonly",
         setTimeout: "readonly",
+        clearTimeout: "readonly",
       },
     },
   },
