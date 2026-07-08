@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Molsnap — paste a SMILES, see the molecule</title>
+    <meta
+      name="description"
+      content="Paste a SMILES string and instantly get a clean 2D structure, a spinnable 3D model, and the molecular formula and weight."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b1f33'/%3E%3Cline x1='7' y1='20' x2='15' y2='12' stroke='%237dd3fc' stroke-width='2.5' stroke-linecap='round'/%3E%3Cline x1='15' y1='12' x2='23' y2='18' stroke='%237dd3fc' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='23' cy='18' r='3' fill='%23fbbf24'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="grid-backdrop" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <h1 class="wordmark">
+        m<span class="wordmark__bond" aria-hidden="true"></span>lsnap
+      </h1>
+      <p class="tagline">paste a SMILES — get the molecule</p>
+    </header>
+
+    <main>
+      <form class="input-strip" id="smiles-form">
+        <label class="input-strip__label" for="smiles-input">SMILES</label>
+        <input
+          id="smiles-input"
+          name="smiles"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="CC(=O)Oc1ccccc1C(=O)O"
+          value="CC(=O)Oc1ccccc1C(=O)O"
+        />
+        <button type="submit" class="render-button">render</button>
+      </form>
+
+      <p class="parse-status" id="parse-status" role="status" aria-live="polite"></p>
+
+      <section class="stage">
+        <div class="panel panel--2d" id="panel-2d">
+          <h2 class="panel__label">2D</h2>
+          <canvas id="canvas-2d"></canvas>
+        </div>
+        <div class="panel panel--3d" id="panel-3d">
+          <h2 class="panel__label">3D</h2>
+          <div id="viewer-3d"></div>
+          <div class="readout" id="readout">
+            <span class="readout__formula" id="readout-formula">—</span>
+            <span class="readout__weight" id="readout-weight">—</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
