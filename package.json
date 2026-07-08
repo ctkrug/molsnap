@@ -5,6 +5,12 @@
   "private": true,
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ctkrug/molsnap.git"
+  },
+  "bugs": "https://github.com/ctkrug/molsnap/issues",
+  "homepage": "https://github.com/ctkrug/molsnap#readme",
   "engines": {
     "node": ">=20"
   },
