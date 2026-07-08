@@ -26,8 +26,8 @@ One page. One input. Paste a SMILES string, press render (or just land with
 the default aspirin example already rendered), and get:
 
 1. A correctly laid-out 2D structure.
-2. A real, spinnable 3D model — not a hand-wave, an actual generated 3D
-   conformer.
+2. A real, spinnable 3D model, lifted out of the flat 2D layout by a
+   lightweight distance-geometry relaxation (see `docs/ARCHITECTURE.md`).
 3. The molecular formula (Hill notation) and molecular weight.
 
 All computed **client-side**, in the browser, with zero backend and zero
@@ -41,12 +41,15 @@ export.
   - [smiles-drawer](https://github.com/reymond-group/smilesDrawer) parses the
     SMILES and lays out the 2D structure directly to canvas.
   - [@rdkit/rdkit](https://www.rdkit.org/docs/) (RDKit compiled to
-    WebAssembly) is the chemistry engine: it re-parses the SMILES, generates
-    a 3D conformer (ETKDG embedding), and derives the molecular formula and
-    exact/average molecular weight — the parts that need real cheminformatics
-    rather than a canvas layout algorithm.
-  - [3Dmol.js](https://3dmol.csb.pitt.edu/) renders the 3D conformer RDKit
-    produces (as a mol block) into an interactive, spinnable viewer.
+    WebAssembly) is the chemistry engine: it re-parses the SMILES into a
+    canonical molecule with explicit hydrogens and derives the atom
+    accounting that feeds the molecular formula and weight, the part that
+    needs real cheminformatics rather than a canvas layout algorithm. (The
+    minimal WASM build exposes no conformer generator, so the 3D coordinates
+    come from a small in-house embedder instead of ETKDG, see
+    `docs/ARCHITECTURE.md`.)
+  - [3Dmol.js](https://3dmol.csb.pitt.edu/) renders the embedder's mol block
+    into an interactive, spinnable viewer.
   - This split means each library does only what it's uniquely good at,
     rather than asking one library to also do the others' job badly.
 - **Static and self-contained.** No backend, no database, no accounts. The
