@@ -71,6 +71,12 @@ function render3d(atoms, bonds) {
   viewer3d.spin(spinEnabled ? "y" : false, SPIN_SPEED);
 }
 
+function updateUrl(smiles) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("smiles", smiles);
+  window.history.replaceState(null, "", url);
+}
+
 function render(smiles) {
   if (isTooLong(smiles)) {
     flashInvalid();
@@ -101,6 +107,7 @@ function render(smiles) {
       markFresh(panel2d);
       markFresh(panel3d);
       setReadout(formula, weight);
+      updateUrl(smiles);
 
       try {
         render3d(atoms, bonds);
@@ -150,6 +157,11 @@ viewer3d.render();
 renderButton.disabled = true;
 renderButton.textContent = "loading…";
 setStatus("Loading chemistry engine…", "");
+
+const smilesFromUrl = new URL(window.location.href).searchParams.get("smiles");
+if (smilesFromUrl) {
+  input.value = smilesFromUrl;
+}
 
 loadRDKit()
   .then((RDKit) => {
