@@ -1,8 +1,10 @@
 # Architecture — Molsnap
 
 A static, client-side SMILES viewer. No backend, no build-time server code —
-everything in `src/` bundles into a self-contained `dist/` that can be hosted
-from any subpath.
+everything in `src/` bundles into a self-contained `site/app/` that can be
+hosted from any subpath. The committed `site/index.html` is the marketing
+landing page; the build drops the app beside it under `site/app/`, so hosting
+the `site/` tree serves the landing at `/` and the app at `/app/`.
 
 ## Data flow
 
@@ -61,7 +63,8 @@ about what atoms are present.
   design system from `docs/DESIGN.md`.
 - `scripts/build.js` — esbuild bundle of `src/main.js`, plus copying
   `index.html`, `styles.css`, and RDKit's `RDKit_minimal.js`/`.wasm` into
-  `dist/`. `--serve` runs an esbuild dev server with watch.
+  `site/app/`. `--serve` runs an esbuild dev server with watch over the
+  whole `site/` tree.
 
 ## RDKit is not bundled
 
@@ -69,7 +72,7 @@ about what atoms are present.
 `typeof process == "object"` and calls `require("fs")` in the Node code
 path. esbuild can't prove that branch is dead when bundling for a browser
 target, so bundling it pulls in a `require("fs")` that breaks in-browser.
-Instead it's copied as-is into `dist/` and loaded via a plain `<script>` tag
+Instead it's copied as-is into `site/app/` and loaded via a plain `<script>` tag
 in `index.html` (see `loadRDKit()` in `src/chem/rdkit.js`), which sets
 `window.initRDKitModule` the same way RDKit's own docs demonstrate.
 
@@ -82,7 +85,7 @@ in `index.html` (see `loadRDKit()` in `src/chem/rdkit.js`), which sets
   molblock → atom-count → formula/weight pipeline, against reference
   molecules and a broad SMILES spread.
 - `test/build.test.js` is a smoke test that `npm run build` produces a
-  self-contained `dist/` with relative asset paths.
+  self-contained `site/app/` with relative asset paths.
 - There is no in-repo browser/DOM test harness for `src/main.js` itself;
   its behavior (rendering, clipboard, URL sync, a11y) has been verified
   manually with Playwright during development, not via an automated suite.
@@ -92,6 +95,6 @@ in `index.html` (see `loadRDKit()` in `src/chem/rdkit.js`), which sets
 ```
 npm install
 npm test
-npm run build   # → dist/
-npm run dev     # esbuild dev server at http://localhost:8080
+npm run build   # → site/app/
+npm run dev     # esbuild dev server at http://localhost:8080 (app at /app/)
 ```
