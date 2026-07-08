@@ -281,6 +281,67 @@ main {
   max-width: 60ch;
 }
 
+.explainer {
+  max-width: 70ch;
+  margin: 0 auto;
+  padding: var(--space-6) 0;
+  border-top: 1px dashed rgba(125, 211, 252, 0.35);
+}
+
+.explainer h2 {
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  margin: 0 0 var(--space-3);
+}
+
+.explainer h3 {
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.1rem;
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--accent);
+}
+
+.explainer p,
+.explainer li,
+.faq dd {
+  color: var(--text-muted);
+}
+
+.explainer p {
+  margin: 0 0 var(--space-2);
+}
+
+.explainer code {
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 0.1em 0.4em;
+  color: var(--accent);
+  font-size: 0.9em;
+}
+
+.explainer ol {
+  margin: 0;
+  padding-left: 1.4em;
+}
+
+.explainer ol li {
+  margin-bottom: var(--space-1);
+}
+
+.faq {
+  margin: 0;
+}
+
+.faq dt {
+  color: var(--text);
+  font-weight: 700;
+  margin-top: var(--space-3);
+}
+
+.faq dd {
+  margin: var(--space-1) 0 0;
+}
+
 .closing {
   text-align: center;
   padding: var(--space-8) 0;

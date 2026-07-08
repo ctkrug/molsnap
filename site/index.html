@@ -124,6 +124,80 @@
         </div>
       </section>
 
+      <section class="explainer" aria-labelledby="explainer-heading">
+        <h2 id="explainer-heading">Reading a SMILES string without the desktop software</h2>
+        <p>
+          SMILES (Simplified Molecular Input Line Entry System) is the
+          shorthand chemists use to write a molecule as plain text.
+          <code>O</code> is water, <code>CCO</code> is ethanol, and
+          <code>CC(=O)Oc1ccccc1C(=O)O</code> is aspirin. It fits in a
+          spreadsheet cell, a URL, or one line of a paper, which is exactly why
+          it turns up everywhere and exactly why it is so hard to read at a
+          glance. The parentheses, ring-closure digits, and lowercase aromatic
+          atoms carry real structure your eye cannot reconstruct on its own.
+        </p>
+        <p>
+          Molsnap closes that gap. Paste a SMILES string, press render, and it
+          draws the flat 2D skeleton, builds a 3D model you can spin and zoom,
+          and prints the Hill-notation formula and molecular weight, all
+          computed in your browser. Nothing is uploaded, so a structure you are
+          still keeping to yourself stays on your machine, and the page keeps
+          working once it has loaded even if you lose your connection.
+        </p>
+
+        <h3>How to use it</h3>
+        <ol>
+          <li>
+            Paste a SMILES string into the input at the top of the app, or tap
+            an example chip (aspirin, caffeine, ibuprofen, benzene, water).
+          </li>
+          <li>
+            Press render. The 2D and 3D panels fill in and the formula and
+            weight appear.
+          </li>
+          <li>
+            Drag the 3D model to orbit it, scroll to zoom, and use the pause
+            button to stop the auto-rotate.
+          </li>
+          <li>
+            Copy the link from your address bar. The SMILES is stored in the
+            URL, so the exact render reopens for anyone you send it to.
+          </li>
+        </ol>
+
+        <h3>Common questions</h3>
+        <dl class="faq">
+          <dt>Is Molsnap free?</dt>
+          <dd>Yes. It is free, needs no account, and runs entirely in your browser.</dd>
+          <dt>Does my SMILES get sent to a server?</dt>
+          <dd>
+            No. Parsing, the structure layout, the 3D coordinates, and the
+            formula and weight are all computed client-side. Your input never
+            leaves the page.
+          </dd>
+          <dt>How accurate is the 3D model?</dt>
+          <dd>
+            It is a fast approximation, not a validated conformer. Molsnap
+            relaxes the 2D layout into 3D with a distance-geometry method so
+            shapes look plausible and spin well. Reach for dedicated software
+            when you need energy-minimized geometry.
+          </dd>
+          <dt>Which molecules does it handle?</dt>
+          <dd>
+            Everyday organic chemistry: chains, branches, rings, aromatics,
+            double and triple bonds, charges, and the common heteroatoms and
+            halogens. A SMILES it cannot parse shows a clear error instead of a
+            wrong picture.
+          </dd>
+          <dt>What is the molecular weight based on?</dt>
+          <dd>
+            Standard atomic weights summed over every atom, including the
+            hydrogens added explicitly during parsing, so the formula and the
+            weight always agree.
+          </dd>
+        </dl>
+      </section>
+
       <section class="closing">
         <h2>Have a SMILES string? Go look at it.</h2>
         <a href="./app/" class="cta-button">Open Molsnap →</a>
