@@ -105,7 +105,7 @@ Make the tool feel good to use and match the design direction.
 
 ## Epic 4 — Ship
 
-- [ ] **4.1 — Landing page**
+- [x] **4.1 — Landing page**
   - `site/` contains a static landing page using the same DESIGN.md
     tokens and direction as the app, explaining what Molsnap is and
     linking to the live app.
