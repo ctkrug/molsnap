@@ -9,6 +9,8 @@ mkdirSync(outdir, { recursive: true });
 
 cpSync("src/index.html", `${outdir}/index.html`);
 cpSync("src/styles.css", `${outdir}/styles.css`);
+cpSync("node_modules/@rdkit/rdkit/dist/RDKit_minimal.js", `${outdir}/RDKit_minimal.js`);
+cpSync("node_modules/@rdkit/rdkit/dist/RDKit_minimal.wasm", `${outdir}/RDKit_minimal.wasm`);
 
 const buildOptions = {
   entryPoints: ["src/main.js"],
