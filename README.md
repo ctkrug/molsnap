@@ -1,5 +1,7 @@
 # Molsnap
 
+[![CI](https://github.com/ctkrug/molsnap/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/molsnap/actions/workflows/ci.yml)
+
 Paste a SMILES string. Get a clean 2D structure, a spinnable 3D model, and the
 molecular formula + weight — instantly, in your browser, no login and no
 server round-trip.
