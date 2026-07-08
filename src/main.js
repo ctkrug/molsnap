@@ -75,6 +75,13 @@ function setReadout(formula, weight) {
   readoutWeight.textContent = weight == null ? "—" : `${weight.toFixed(2)} g/mol`;
 }
 
+function clearPanels() {
+  const ctx2d = canvas2d.getContext("2d");
+  if (ctx2d) ctx2d.clearRect(0, 0, canvas2d.width, canvas2d.height);
+  viewer3d.clear();
+  viewer3d.render();
+}
+
 function render3d(atoms, bonds) {
   const positioned = embed3d(atoms, bonds);
   const molblock = toMolblock(positioned, bonds);
@@ -98,6 +105,7 @@ function render(smiles) {
     flashInvalid();
     setStatus(`SMILES is too long (max ${MAX_SMILES_LENGTH} characters).`, "error");
     setReadout(null, null);
+    clearPanels();
     return;
   }
 
@@ -106,6 +114,7 @@ function render(smiles) {
     flashInvalid();
     setStatus("Could not parse that SMILES string.", "error");
     setReadout(null, null);
+    clearPanels();
     return;
   }
 
@@ -140,6 +149,7 @@ function render(smiles) {
       flashInvalid();
       setStatus("Could not parse that SMILES string.", "error");
       setReadout(null, null);
+      clearPanels();
     }
   );
 }
