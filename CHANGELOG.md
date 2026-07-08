@@ -1,7 +1,19 @@
 # Changelog
 
-## Unreleased
+## v1.0.0 (2026-07-08)
 
+First public release.
+
+- Closeout: build the app into `site/app/` so the landing page's live "open
+  the app" link resolves once the `site/` tree is hosted (it previously
+  pointed at a directory the build never produced).
+- Landing page: added a SMILES explainer and FAQ for search intent, Open
+  Graph and Twitter card meta, and a portfolio cross-promotion link.
+- Copy: removed em-dashes across the README, landing page, and app copy, and
+  corrected the docs' 3D description to the real in-house embedder (not
+  ETKDG).
+- Docs: rewrote the README around the live demo and a verified example table;
+  added the dev.to launch article.
 - Ship-gate QA pass: fixed the 3D viewer's format string ("mol" isn't a
   registered 3Dmol.js parser key — it was silently falling through
   content-sniffing on every render), fixed invalid SMILES leaving a stale
