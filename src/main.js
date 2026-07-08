@@ -1,6 +1,8 @@
 import SmilesDrawer from "smiles-drawer";
 import * as $3Dmol from "3dmol";
-import { loadRDKit } from "./chem/rdkit.js";
+import { loadRDKit, analyzeSmiles } from "./chem/rdkit.js";
+import { parseMolblock, atomCountsFromAtoms } from "./chem/molblock.js";
+import { toHillFormula, molecularWeight } from "./chem/formula.js";
 
 const form = document.getElementById("smiles-form");
 const input = document.getElementById("smiles-input");
@@ -9,11 +11,15 @@ const canvas2d = document.getElementById("canvas-2d");
 const panel2d = document.getElementById("panel-2d");
 const panel3d = document.getElementById("panel-3d");
 const renderButton = form.querySelector(".render-button");
+const readoutFormula = document.getElementById("readout-formula");
+const readoutWeight = document.getElementById("readout-weight");
 
 const drawer = new SmilesDrawer.Drawer({ width: 1, height: 1 });
 const viewer3d = $3Dmol.createViewer(document.getElementById("viewer-3d"), {
   backgroundColor: "#122a4a",
 });
+
+let RDKitModule = null;
 
 function sizeCanvasToPanel(canvas) {
   const rect = canvas.parentElement.getBoundingClientRect();
@@ -42,8 +48,26 @@ function markFresh(panel) {
   panel.classList.add("is-fresh");
 }
 
+function setReadout(formula, weight) {
+  readoutFormula.textContent = formula ?? "—";
+  readoutWeight.textContent = weight == null ? "—" : `${weight.toFixed(2)} g/mol`;
+}
+
 function render(smiles) {
   sizeCanvasToPanel(canvas2d);
+
+  const analysis = analyzeSmiles(RDKitModule, smiles);
+  if (!analysis.valid) {
+    flashInvalid();
+    setStatus("Could not parse that SMILES string.", "error");
+    setReadout(null, null);
+    return;
+  }
+
+  const { atoms } = parseMolblock(analysis.molblock);
+  const counts = atomCountsFromAtoms(atoms);
+  const formula = toHillFormula(counts);
+  const weight = molecularWeight(counts);
 
   SmilesDrawer.parse(
     smiles,
@@ -53,14 +77,13 @@ function render(smiles) {
       form.classList.add("is-valid");
       markFresh(panel2d);
       markFresh(panel3d);
-      setStatus(
-        "2D structure rendered. 3D generation and formula/weight land in the next build phase.",
-        "ok"
-      );
+      setReadout(formula, weight);
+      setStatus(`Rendered ${formula} — ${weight.toFixed(2)} g/mol.`, "ok");
     },
     () => {
       flashInvalid();
       setStatus("Could not parse that SMILES string.", "error");
+      setReadout(null, null);
     }
   );
 }
@@ -80,7 +103,8 @@ renderButton.textContent = "loading…";
 setStatus("Loading chemistry engine…", "");
 
 loadRDKit()
-  .then(() => {
+  .then((RDKit) => {
+    RDKitModule = RDKit;
     renderButton.disabled = false;
     renderButton.textContent = "render";
     render(input.value.trim());
