@@ -4,6 +4,7 @@ import { loadRDKit, analyzeSmiles } from "./chem/rdkit.js";
 import { parseMolblock, toMolblock, atomCountsFromAtoms } from "./chem/molblock.js";
 import { embed3d } from "./chem/embed3d.js";
 import { toHillFormula, molecularWeight } from "./chem/formula.js";
+import { isTooLong, MAX_SMILES_LENGTH } from "./chem/validateInput.js";
 
 const form = document.getElementById("smiles-form");
 const input = document.getElementById("smiles-input");
@@ -71,6 +72,13 @@ function render3d(atoms, bonds) {
 }
 
 function render(smiles) {
+  if (isTooLong(smiles)) {
+    flashInvalid();
+    setStatus(`SMILES is too long (max ${MAX_SMILES_LENGTH} characters).`, "error");
+    setReadout(null, null);
+    return;
+  }
+
   const analysis = analyzeSmiles(RDKitModule, smiles);
   if (!analysis.valid) {
     flashInvalid();
