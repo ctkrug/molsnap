@@ -16,6 +16,7 @@ const renderButton = form.querySelector(".render-button");
 const readoutFormula = document.getElementById("readout-formula");
 const readoutWeight = document.getElementById("readout-weight");
 const spinToggle = document.getElementById("spin-toggle");
+const exampleChips = document.getElementById("example-chips");
 
 const viewer3d = $3Dmol.createViewer(document.getElementById("viewer-3d"), {
   backgroundColor: "#122a4a",
@@ -142,6 +143,13 @@ window.addEventListener("resize", () => {
     const smiles = input.value.trim();
     if (smiles) render(smiles);
   }, 150);
+});
+
+exampleChips.addEventListener("click", (event) => {
+  const chip = event.target.closest(".chip");
+  if (!chip) return;
+  input.value = chip.dataset.smiles;
+  if (RDKitModule) render(chip.dataset.smiles);
 });
 
 spinToggle.addEventListener("click", () => {
