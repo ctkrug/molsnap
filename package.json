@@ -11,14 +11,17 @@
   "scripts": {
     "build": "node scripts/build.js",
     "dev": "node scripts/build.js --serve",
-    "test": "node --test test/"
+    "test": "node --test test/",
+    "lint": "eslint ."
   },
   "dependencies": {
-    "3dmol": "^2.5.5",
     "@rdkit/rdkit": "^2025.3.4-1.0.0",
+    "3dmol": "^2.5.5",
     "smiles-drawer": "^2.4.1"
   },
   "devDependencies": {
-    "esbuild": "^0.28.1"
+    "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.1",
+    "eslint": "^10.6.0"
   }
 }
