@@ -80,7 +80,7 @@ function render3d(atoms, bonds) {
   const molblock = toMolblock(positioned, bonds);
 
   viewer3d.clear();
-  viewer3d.addModel(molblock, "mol");
+  viewer3d.addModel(molblock, "sdf");
   viewer3d.setStyle({}, { stick: { radius: 0.12 }, sphere: { scale: 0.25 } });
   viewer3d.zoomTo();
   viewer3d.render();
