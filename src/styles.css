@@ -325,21 +325,26 @@ main {
   display: flex;
   flex-direction: column;
   position: relative;
-  opacity: 0;
-  transform: scale(0.98);
-  animation: panel-in 200ms var(--ease) forwards;
-  animation-delay: 80ms;
 }
 
-@keyframes panel-in {
-  to {
+@keyframes panel-fresh {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.98);
+    box-shadow: 0 0 0 rgba(125, 211, 252, 0);
+  }
+  30% {
+    box-shadow: var(--glow);
+  }
+  100% {
     opacity: 1;
     transform: scale(1);
+    box-shadow: 0 0 0 rgba(125, 211, 252, 0);
   }
 }
 
 .panel.is-fresh {
-  box-shadow: var(--glow);
+  animation: panel-fresh 400ms var(--ease);
 }
 
 .panel__label {
@@ -461,9 +466,11 @@ main {
     animation: none;
   }
 
-  .panel {
+  .panel,
+  .panel.is-fresh {
     opacity: 1;
     transform: none;
     animation: none;
+    box-shadow: none;
   }
 }
