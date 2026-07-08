@@ -1,66 +1,100 @@
 # Molsnap
 
+**▶ Live demo: [apps.charliekrug.com/molsnap](https://apps.charliekrug.com/molsnap/)**
+
 [![CI](https://github.com/ctkrug/molsnap/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/molsnap/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Paste a SMILES string. Get a clean 2D structure, a spinnable 3D model, and the
-molecular formula + weight — instantly, in your browser, no login and no
-server round-trip.
+Paste a SMILES string, see the molecule. Molsnap turns chemistry's plain-text
+shorthand into a clean 2D structure, a spinnable 3D model, and the molecular
+formula and weight, all in your browser with no account and no server
+round-trip.
 
 ```
-CC(=O)Oc1ccccc1C(=O)O  →  aspirin, rendered and rotating, C9H8O4, 180.16 g/mol
+CC(=O)Oc1ccccc1C(=O)O  ->  aspirin: 2D skeleton, spinnable 3D, C9H8O4, 180.16 g/mol
 ```
 
-## Why
+## Who it's for
 
-Chemists, students, and the chemistry-curious constantly need a fast way to
-turn a SMILES string into something they can actually look at. Existing tools
-are either heavyweight desktop software, gated behind an account, or round-trip
-to a server for what is fundamentally a client-side computation. Molsnap is a
-scratchpad: paste, see it, done.
+Chemistry students, researchers, and developers who keep running into SMILES
+strings in papers, datasets, and problem sets and just want to see the
+structure. The usual options are heavyweight desktop software, an
+account-gated web viewer, or a server round-trip for a computation the browser
+can do on its own. Molsnap is the scratchpad in between: paste, look, done.
 
 ## Features
 
-- **2D structure** — proper bond geometry and layout from a SMILES string,
-  rendered on canvas via [smiles-drawer](https://github.com/reymond-group/smilesDrawer).
-- **3D model** — atoms relax into 3D client-side (a lightweight
-  distance-geometry embedder — see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
-  for why) and render as a spinnable, zoomable model via
-  [3Dmol.js](https://3dmol.csb.pitt.edu/), with a pause/resume auto-rotate toggle.
-- **Formula & molecular weight** — Hill-notation formula and molecular
-  weight, computed via [RDKit's WASM build](https://www.rdkit.org/docs/)
-  from the same atom accounting that drives the 3D structure.
-- **Paste-to-render** — no upload, no account, no build step for the user;
-  open the page and paste.
-- **Quick-pick examples** — aspirin, caffeine, ibuprofen, benzene, and water
-  chips render instantly.
-- **Shareable renders** — the SMILES syncs to the URL's `?smiles=` query
-  string, so any rendered molecule is a copy-pasteable link.
-- **Copy to clipboard** — one click to copy the SMILES or the formula.
+- **Real 2D structure.** Bond geometry and ring layout computed from the SMILES
+  with [smiles-drawer](https://github.com/reymond-group/smilesDrawer), drawn to
+  canvas. Any valid structure renders, not a curated few.
+- **Spinnable 3D model.** Atoms are lifted out of the flat layout by an
+  in-house distance-geometry embedder (the minimal RDKit WASM ships no
+  conformer API, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)) and
+  rendered with [3Dmol.js](https://3dmol.csb.pitt.edu/). Grab to orbit, scroll
+  to zoom, pause the auto-rotate.
+- **Formula and weight in sync.** Hill-notation formula and molecular weight
+  come from the same atom accounting that drives the 3D view, so they never
+  disagree. Parsing uses [RDKit's WASM build](https://www.rdkit.org/docs/).
+- **Paste to render.** No upload, no account, no build step for the user.
+- **Quick-pick examples.** Aspirin, caffeine, ibuprofen, benzene, and water
+  render on tap.
+- **Shareable links.** The SMILES syncs to the `?smiles=` query string, so any
+  render is a copy-pasteable URL.
+- **Copy to clipboard.** One click to copy the SMILES or the formula.
 
-## Stack
+## Try these
 
-Static, client-side JavaScript. No backend, no database, no user accounts.
-Built with [esbuild](https://esbuild.github.io/) and tested with Node's
-built-in test runner (`node:test`).
+Paste any of these into the input, or open the shareable link:
 
-## Status
+| Molecule | SMILES | Result |
+|---|---|---|
+| Aspirin | `CC(=O)Oc1ccccc1C(=O)O` | C9H8O4, 180.16 g/mol |
+| Caffeine | `CN1C=NC2=C1C(=O)N(C(=O)N2C)C` | C8H10N4O2, 194.19 g/mol |
+| Ibuprofen | `CC(C)Cc1ccc(cc1)C(C)C(=O)O` | C13H18O2, 206.28 g/mol |
+| Benzene | `c1ccccc1` | C6H6, 78.11 g/mol |
+| Water | `O` | H2O, 18.02 g/mol |
 
-Core render pipeline is functionally complete — see
-[`docs/VISION.md`](docs/VISION.md) for the full design and
-[`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan.
+## Run it locally
+
+```
+npm install
+npm run dev     # esbuild dev server at http://localhost:8080 (app at /app/)
+```
+
+To build the static site:
+
+```
+npm run build   # bundles the app into site/app/
+```
+
+The deployable is the `site/` tree: `site/index.html` is the landing page and
+the build drops the app beside it under `site/app/`. Both use relative asset
+paths, so the whole thing hosts from any subpath.
 
 ## Development
 
 ```
-npm install
-npm test        # run the unit test suite
-npm run build   # bundle the app into dist/
-npm run dev     # serve src/ locally for manual testing
+npm test        # unit + build smoke tests (node:test)
+npm run lint    # ESLint
+npm run build   # production bundle
 ```
 
-`site/` is a separate static landing page (no build step) — open
-`site/index.html` directly or serve the directory to preview it.
+CI runs the same three steps on every push.
+
+## How it works
+
+A SMILES string goes to two places. smiles-drawer lays out the 2D structure,
+and RDKit (WASM) parses it into an all-explicit-hydrogens molblock. That
+molblock is the single source of truth: the same atom list feeds the
+formula/weight math and the 3D embedder, which relaxes the flat coordinates
+into a spinnable shape for 3Dmol.js to render. Full detail lives in
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md); the visual direction is in
+[`docs/DESIGN.md`](docs/DESIGN.md).
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT, see [`LICENSE`](LICENSE).
+
+---
+
+More of Charlie's projects &rarr; [apps.charliekrug.com](https://apps.charliekrug.com)
