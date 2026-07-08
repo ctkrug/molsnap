@@ -136,11 +136,11 @@ function render(smiles) {
 
       try {
         render3d(atoms, bonds);
-        setStatus(`Rendered ${formula} — ${weight.toFixed(2)} g/mol.`, "ok");
+        setStatus(`Rendered ${formula}, ${weight.toFixed(2)} g/mol.`, "ok");
       } catch (error) {
         console.error(error);
         setStatus(
-          `Rendered ${formula} — ${weight.toFixed(2)} g/mol. 3D isn't available for this molecule.`,
+          `Rendered ${formula}, ${weight.toFixed(2)} g/mol. 3D isn't available for this molecule.`,
           "ok"
         );
       }
