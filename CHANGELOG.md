@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Ship-gate QA pass: fixed the 3D viewer's format string ("mol" isn't a
+  registered 3Dmol.js parser key — it was silently falling through
+  content-sniffing on every render), fixed invalid SMILES leaving a stale
+  2D/3D render on screen instead of clearing the panels, and fixed the dev
+  server's startup log always printing "undefined" as the host.
 - Core render pipeline: RDKit WASM parses SMILES and drives a shared atom
   accounting for the Hill formula/weight readout and a custom
   distance-geometry 3D embedder rendered via 3Dmol.js — replacing the
