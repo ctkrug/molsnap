@@ -13,6 +13,7 @@ export default [
         setTimeout: "readonly",
         clearTimeout: "readonly",
         URL: "readonly",
+        navigator: "readonly",
       },
     },
   },

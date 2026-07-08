@@ -17,6 +17,8 @@ const readoutFormula = document.getElementById("readout-formula");
 const readoutWeight = document.getElementById("readout-weight");
 const spinToggle = document.getElementById("spin-toggle");
 const exampleChips = document.getElementById("example-chips");
+const copySmilesButton = document.getElementById("copy-smiles");
+const copyFormulaButton = document.getElementById("copy-formula");
 
 const viewer3d = $3Dmol.createViewer(document.getElementById("viewer-3d"), {
   backgroundColor: "#122a4a",
@@ -53,6 +55,19 @@ function markFresh(panel) {
   // Force reflow so the class can be re-added to replay the animation.
   void panel.offsetWidth;
   panel.classList.add("is-fresh");
+}
+
+function copyToClipboard(text, button) {
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const originalLabel = button.getAttribute("aria-label");
+    button.classList.add("is-copied");
+    button.setAttribute("aria-label", "Copied!");
+    setTimeout(() => {
+      button.classList.remove("is-copied");
+      button.setAttribute("aria-label", originalLabel);
+    }, 1500);
+  });
 }
 
 function setReadout(formula, weight) {
@@ -143,6 +158,16 @@ window.addEventListener("resize", () => {
     const smiles = input.value.trim();
     if (smiles) render(smiles);
   }, 150);
+});
+
+copySmilesButton.addEventListener("click", () => {
+  copyToClipboard(input.value.trim(), copySmilesButton);
+});
+
+copyFormulaButton.addEventListener("click", () => {
+  const formula = readoutFormula.textContent;
+  if (formula === "—") return;
+  copyToClipboard(formula, copyFormulaButton);
 });
 
 exampleChips.addEventListener("click", (event) => {
