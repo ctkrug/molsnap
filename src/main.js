@@ -1,7 +1,8 @@
 import SmilesDrawer from "smiles-drawer";
 import * as $3Dmol from "3dmol";
 import { loadRDKit, analyzeSmiles } from "./chem/rdkit.js";
-import { parseMolblock, atomCountsFromAtoms } from "./chem/molblock.js";
+import { parseMolblock, toMolblock, atomCountsFromAtoms } from "./chem/molblock.js";
+import { embed3d } from "./chem/embed3d.js";
 import { toHillFormula, molecularWeight } from "./chem/formula.js";
 
 const form = document.getElementById("smiles-form");
@@ -13,21 +14,25 @@ const panel3d = document.getElementById("panel-3d");
 const renderButton = form.querySelector(".render-button");
 const readoutFormula = document.getElementById("readout-formula");
 const readoutWeight = document.getElementById("readout-weight");
+const spinToggle = document.getElementById("spin-toggle");
 
-const drawer = new SmilesDrawer.Drawer({ width: 1, height: 1 });
 const viewer3d = $3Dmol.createViewer(document.getElementById("viewer-3d"), {
   backgroundColor: "#122a4a",
 });
 
-let RDKitModule = null;
+const SPIN_SPEED = 0.6;
 
-function sizeCanvasToPanel(canvas) {
-  const rect = canvas.parentElement.getBoundingClientRect();
+let RDKitModule = null;
+let spinEnabled = true;
+
+function draw2d(tree) {
+  const rect = canvas2d.getBoundingClientRect();
   const ratio = window.devicePixelRatio || 1;
-  canvas.width = rect.width * ratio;
-  canvas.height = rect.height * ratio;
-  canvas.style.width = `${rect.width}px`;
-  canvas.style.height = `${rect.height}px`;
+  const drawer = new SmilesDrawer.Drawer({
+    width: Math.max(1, Math.round(rect.width * ratio)),
+    height: Math.max(1, Math.round(rect.height * ratio)),
+  });
+  drawer.draw(tree, canvas2d, "dark");
 }
 
 function setStatus(message, state) {
@@ -53,9 +58,19 @@ function setReadout(formula, weight) {
   readoutWeight.textContent = weight == null ? "—" : `${weight.toFixed(2)} g/mol`;
 }
 
-function render(smiles) {
-  sizeCanvasToPanel(canvas2d);
+function render3d(atoms, bonds) {
+  const positioned = embed3d(atoms, bonds);
+  const molblock = toMolblock(positioned, bonds);
 
+  viewer3d.clear();
+  viewer3d.addModel(molblock, "mol");
+  viewer3d.setStyle({}, { stick: { radius: 0.12 }, sphere: { scale: 0.25 } });
+  viewer3d.zoomTo();
+  viewer3d.render();
+  viewer3d.spin(spinEnabled ? "y" : false, SPIN_SPEED);
+}
+
+function render(smiles) {
   const analysis = analyzeSmiles(RDKitModule, smiles);
   if (!analysis.valid) {
     flashInvalid();
@@ -64,7 +79,7 @@ function render(smiles) {
     return;
   }
 
-  const { atoms } = parseMolblock(analysis.molblock);
+  const { atoms, bonds } = parseMolblock(analysis.molblock);
   const counts = atomCountsFromAtoms(atoms);
   const formula = toHillFormula(counts);
   const weight = molecularWeight(counts);
@@ -72,13 +87,23 @@ function render(smiles) {
   SmilesDrawer.parse(
     smiles,
     (tree) => {
-      drawer.draw(tree, canvas2d, "dark");
+      draw2d(tree);
       form.classList.remove("is-invalid");
       form.classList.add("is-valid");
       markFresh(panel2d);
       markFresh(panel3d);
       setReadout(formula, weight);
-      setStatus(`Rendered ${formula} — ${weight.toFixed(2)} g/mol.`, "ok");
+
+      try {
+        render3d(atoms, bonds);
+        setStatus(`Rendered ${formula} — ${weight.toFixed(2)} g/mol.`, "ok");
+      } catch (error) {
+        console.error(error);
+        setStatus(
+          `Rendered ${formula} — ${weight.toFixed(2)} g/mol. 3D isn't available for this molecule.`,
+          "ok"
+        );
+      }
     },
     () => {
       flashInvalid();
@@ -94,7 +119,23 @@ form.addEventListener("submit", (event) => {
   if (smiles) render(smiles);
 });
 
-window.addEventListener("resize", () => sizeCanvasToPanel(canvas2d));
+let resizeTimeout = null;
+window.addEventListener("resize", () => {
+  viewer3d.resize();
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    const smiles = input.value.trim();
+    if (smiles) render(smiles);
+  }, 150);
+});
+
+spinToggle.addEventListener("click", () => {
+  spinEnabled = !spinEnabled;
+  spinToggle.setAttribute("aria-pressed", String(spinEnabled));
+  spinToggle.setAttribute("aria-label", spinEnabled ? "Pause auto-rotate" : "Resume auto-rotate");
+  spinToggle.textContent = spinEnabled ? "⏸" : "▶";
+  viewer3d.spin(spinEnabled ? "y" : false, SPIN_SPEED);
+});
 
 viewer3d.render();
 
