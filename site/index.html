@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Molsnap — paste a SMILES, see the molecule</title>
+    <meta
+      name="description"
+      content="Paste a SMILES string and instantly get a clean 2D structure, a spinnable 3D model, and the molecular formula and weight — free, in your browser, no account."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b1f33'/%3E%3Cline x1='7' y1='20' x2='15' y2='12' stroke='%237dd3fc' stroke-width='2.5' stroke-linecap='round'/%3E%3Cline x1='15' y1='12' x2='23' y2='18' stroke='%237dd3fc' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='23' cy='18' r='3' fill='%23fbbf24'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="grid-backdrop" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <h1 class="wordmark">
+        m<span class="wordmark__bond" aria-hidden="true"></span>lsnap
+      </h1>
+      <nav class="header-nav">
+        <a href="https://github.com/ctkrug/molsnap">source</a>
+        <a href="./app/" class="header-nav__cta">open the app →</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">a chemistry scratchpad</p>
+          <h2>Paste a SMILES. See the molecule.</h2>
+          <p class="lede">
+            A SMILES string is easy to write and impossible to picture. Molsnap
+            turns it into a real 2D structure, a spinnable 3D model, and the
+            molecular formula and weight — instantly, in your browser. No
+            account, no upload, no install.
+          </p>
+          <a href="./app/" class="cta-button">Open Molsnap →</a>
+          <p class="hero__note">Free. Runs entirely client-side.</p>
+        </div>
+
+        <div class="hero__sample" aria-hidden="true">
+          <p class="hero__sample-label">SMILES</p>
+          <code class="hero__sample-input">CC(=O)Oc1ccccc1C(=O)O</code>
+          <svg
+            class="hero__sample-structure"
+            viewBox="0 0 220 160"
+            role="img"
+            aria-label="Aspirin's ball-and-stick structure"
+          >
+            <g stroke="#7dd3fc" stroke-width="2" fill="none">
+              <polygon points="40,60 70,42 100,60 100,96 70,114 40,96" />
+              <line x1="100" y1="60" x2="130" y2="42" />
+              <line x1="130" y1="42" x2="160" y2="60" stroke="#f87171" />
+              <line x1="130" y1="42" x2="130" y2="14" stroke="#f87171" />
+              <line x1="70" y1="114" x2="70" y2="142" stroke="#f87171" />
+            </g>
+            <g fill="#c7d9ec">
+              <circle cx="40" cy="60" r="5" />
+              <circle cx="70" cy="42" r="5" />
+              <circle cx="100" cy="60" r="5" />
+              <circle cx="100" cy="96" r="5" />
+              <circle cx="70" cy="114" r="5" />
+              <circle cx="40" cy="96" r="5" />
+              <circle cx="130" cy="42" r="5" />
+            </g>
+            <g fill="#f87171">
+              <circle cx="160" cy="60" r="5" />
+              <circle cx="130" cy="14" r="5" />
+              <circle cx="70" cy="142" r="5" />
+            </g>
+          </svg>
+          <p class="hero__sample-readout">C9H8O4 &middot; 180.16 g/mol</p>
+        </div>
+      </section>
+
+      <section class="specs" aria-label="What Molsnap does">
+        <div class="specs__row">
+          <span class="specs__index">01</span>
+          <h3>Real 2D layout</h3>
+          <p>
+            Bond geometry and ring layout computed from the SMILES itself, not
+            a lookup image — any valid structure renders, not just a curated
+            few.
+          </p>
+        </div>
+        <div class="specs__row">
+          <span class="specs__index">02</span>
+          <h3>A spinnable 3D model</h3>
+          <p>
+            Atoms relax into three dimensions right in the page and orbit
+            under your cursor — grab it, zoom it, pause it.
+          </p>
+        </div>
+        <div class="specs__row">
+          <span class="specs__index">03</span>
+          <h3>Formula and weight, always in sync</h3>
+          <p>
+            Hill-notation formula and molecular weight computed from the same
+            atom accounting as the structure — never a mismatched placeholder.
+          </p>
+        </div>
+      </section>
+
+      <section class="closing">
+        <h2>Have a SMILES string? Go look at it.</h2>
+        <a href="./app/" class="cta-button">Open Molsnap →</a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Molsnap &middot; <a href="https://github.com/ctkrug/molsnap">github.com/ctkrug/molsnap</a></p>
+    </footer>
+  </body>
+</html>
